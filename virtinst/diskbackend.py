@@ -144,8 +144,8 @@ def manage_path(conn, path):
     if not path:
         return None, None
 
-    if not path_is_url(path):
-        path = os.path.abspath(path)
+    # if not path_is_url(path):
+    #     path = os.path.abspath(path)
     vol, pool = check_if_path_managed(conn, path)
     if vol or pool or not _can_auto_manage(path):
         return vol, pool
@@ -600,7 +600,14 @@ class StorageBackend(_StorageBase):
         return None
 
     def validate(self, disk):
-        ignore = disk
+        if getattr(self._parent_pool_xml, "type", "") == "rbd":
+            # add auth from pool to disk
+            # TODO: multiple hosts in disk
+            # logging.debug(self._parent_pool_xml.hosts.__str__())
+            disk.auth_type = self._parent_pool_xml.auth_type
+            disk.auth_username = self._parent_pool_xml.auth_username
+            disk.auth_secret_uuid = self._parent_pool_xml.auth_secret_uuid
+            disk.auth_secret_type = "ceph"
         return
     def get_vol_install(self):
         return None

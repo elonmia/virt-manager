@@ -406,6 +406,22 @@ class StoragePool(_StorageObject):
     target_path = XMLProperty("./target/path",
                               default_cb=_get_default_target_path)
 
+    source_host_name = XMLProperty("./source/host/@name")
+    source_host_port = XMLProperty("./source/host/@port", is_int=True)
+
+    auth_type = XMLProperty('./source/auth/@type')
+    auth_username = XMLProperty('./source/auth/@username')
+    auth_secret_uuid = XMLProperty('./source/auth/secret/@uuid')
+
+    def add_host_obj(self, obj):
+        self.add_child(obj)
+    def add_host(self, name, port=None):
+        obj = _Host(self.conn)
+        obj.name = name
+        obj.port = port
+        self.add_child(obj)
+    def remove_host(self, obj):
+        self.remove_child(obj)
     hosts = XMLChildProperty(_Host, relative_xpath="./source")
 
 

@@ -596,6 +596,10 @@ class DeviceDisk(Device):
     source_host_port = XMLProperty("./source/host/@port", is_int=True)
     source_host_transport = XMLProperty("./source/host/@transport")
     source_host_socket = XMLProperty("./source/host/@socket")
+    auth_type = XMLProperty('./auth/@type')
+    auth_username = XMLProperty('./auth/@username')
+    auth_secret_type = XMLProperty('./auth/secret/@type')
+    auth_secret_uuid = XMLProperty('./auth/secret/@uuid')
 
     def _set_source_network_from_url(self, uri):
         from ..uri import URI
